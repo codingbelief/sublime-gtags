@@ -1,0 +1,8 @@
+[
+   { "caption": "-" },
+   { "caption": "Build Tags", "command": "gtags_build_tags",
+		"args": {
+			"paths": []
+		} },
+   { "caption": "-" }
+]
