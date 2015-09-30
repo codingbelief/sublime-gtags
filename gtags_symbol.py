@@ -34,7 +34,7 @@ class GtagsSymbol(object):
 	def __init__(self, file_path=None):
 
 		GtagsSymbol.pwd = GtagsProject().get_pwd(file_path)
-
+		self.setup_kwargs()
 		if GtagsSymbol.auto_update_thread is None:
 			logger.info("creat auto update thread")
 			GtagsSymbol.auto_update_thread = threading.Thread(target=self.auto_update)
@@ -118,6 +118,21 @@ class GtagsSymbol(object):
 		return 0
 
 	def sfupdate(self, file_path):
+
+		file_type = os.path.splitext(file_path)[1]
+		logger.info("sfupdate file type %s", file_type)
+
+		if ".h" in file_type:
+			ret = 0
+		elif ".c" in file_type:
+			ret = 0
+		elif ".cpp" in file_type:
+			ret = 0
+		elif ".java" in file_type:
+			ret = 0
+		else:
+			logger.error("file type %s not supported", file_type)
+			return -1
 
 		ret = GtagsProject().is_file_in_project(file_path)
 		if ret is False:
