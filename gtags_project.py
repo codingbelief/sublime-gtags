@@ -16,7 +16,20 @@ class GtagsProject(object):
 	def get_pwd(self, file_path):
 
 		project = sublime.active_window().project_data()
+		if project is None:
+			logger.info("No active project!")
+			if file_path is None:
+				logger.info("No active file!")
+				return "./"
+			return os.path.dirname(file_path)
+
 		folders = project.get('folders')
+		if folders is None:
+			logger.info("No active folders!")
+			if file_path is None:
+				logger.info("No active file!")
+				return "./"
+			return os.path.dirname(file_path)
 
 		if file_path is None:
 			return os.path.normpath(folders[0].get('path'))
