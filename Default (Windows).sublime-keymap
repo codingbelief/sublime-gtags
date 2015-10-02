@@ -11,6 +11,7 @@
 	{ "keys": ["alt+3"], "command": "gtags_list_definitions_of_file" },
 	{ "keys": ["alt+4"], "command": "gtags_lookup_definition" },
 	{ "keys": ["alt+u"], "command": "gtags_update_tags" },
+	{ "keys": ["alt+v"], "command": "gtags_version" },
 	{ "keys": ["alt+i"], "command": "gtags_single_file_update_tags" },
 	{ "keys": ["alt+m"], "command": "strapdown_markdown_preview", "args": {"target": "browser"} },
 	{ "keys": ["alt+f"], "command": "side_bar_find_in_parent",   "args": {"paths": []} },

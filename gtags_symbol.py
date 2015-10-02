@@ -117,6 +117,29 @@ class GtagsSymbol(object):
 			return -1
 		return 0
 
+	def version(self, file_path):
+		h = self.exec_cmd("global --version")
+		if h is None:
+			logger.warning("can not exec global!")
+			return -1
+		stdout, stderr = h.communicate()
+		if len(stderr) > 0:
+			logger.error(stderr)
+
+		logger.info(stdout)
+
+		h = self.exec_cmd("gtags --version")
+		if h is None:
+			logger.warning("can not exec gtags!")
+			return -1
+		stdout, stderr = h.communicate()
+		if len(stderr) > 0:
+			logger.error(stderr)
+
+		logger.info(stdout)
+
+		return 0
+
 	def sfupdate(self, file_path):
 
 		file_type = os.path.splitext(file_path)[1]

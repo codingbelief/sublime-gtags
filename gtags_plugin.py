@@ -299,6 +299,9 @@ class GtagsUpdateTags(sublime_plugin.TextCommand):
 			logger.info("UpdateTags failed")
 			sublime.status_message('Gtags UpdateTags Failed')
 
+class GtagsVersion(sublime_plugin.TextCommand):
+	def run(self, edit):
+		GtagsSymbol(self.view.file_name()).version(self.view.file_name())
 
 class GtagsSingleFileUpdateTags(sublime_plugin.TextCommand):
 
