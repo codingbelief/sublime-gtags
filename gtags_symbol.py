@@ -346,7 +346,7 @@ class GtagsSymbol(object):
 
 		logger.info("thread_build_tags begin")
 		self.setup_kwargs()
-		h = self.exec_cmd("gtags --sqlite3")
+		h = self.exec_cmd("gtags --sqlite3 --skip-unreadable")
 		#h = self.exec_cmd("global " + options) # test errors msg output
 		if h is None:
 			logger.warning("can not exec global!")
