@@ -161,6 +161,20 @@ class GtagsSymbol(object):
 		if ret is False:
 			return -2
 
+		h = self.exec_cmd("global -p")
+		if h is None:
+			logger.warning("can not exec gtags!")
+			return -1
+		# read the stdout and stderr
+		stdout, stderr = h.communicate()
+
+		if len(stderr) > 0:
+			logger.error(stderr)
+			logger.error("can not update when GTAGS is not builded")
+			return -3
+
+		logger.info(stdout)
+
 		# Update tag file incrementally
 		h = self.exec_cmd("gtags --single-update " + file_path)
 		#h = self.exec_cmd("global -u")
