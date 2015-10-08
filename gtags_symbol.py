@@ -315,7 +315,7 @@ class GtagsSymbol(object):
 
 		logger.info("get the completions")
 
-		return self.search("-axc", prefix)
+		return self.search_project("-axc", prefix)
 
 
 	# Description
