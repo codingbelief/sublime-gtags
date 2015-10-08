@@ -145,21 +145,9 @@ class GtagsSymbol(object):
 		file_type = os.path.splitext(file_path)[1]
 		logger.info("sfupdate file type %s", file_type)
 
-		if ".h" in file_type:
-			ret = 0
-		elif ".c" in file_type:
-			ret = 0
-		elif ".cpp" in file_type:
-			ret = 0
-		elif ".java" in file_type:
-			ret = 0
-		else:
+		if not file_type in [".h", ".c", ".cpp", ".java"]:
 			logger.error("file type %s not supported", file_type)
 			return -1
-
-		ret = GtagsProject().is_file_in_project(file_path)
-		if ret is False:
-			return -2
 
 		h = self.exec_cmd("global -p")
 		if h is None:
