@@ -128,16 +128,6 @@ class GtagsSymbol(object):
 
 		logger.info(stdout)
 
-		h = self.exec_cmd("gtags --version")
-		if h is None:
-			logger.warning("can not exec gtags!")
-			return -1
-		stdout, stderr = h.communicate()
-		if len(stderr) > 0:
-			logger.error(stderr)
-
-		logger.info(stdout)
-
 		return 0
 
 	def sfupdate(self, file_path):
