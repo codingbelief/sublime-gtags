@@ -103,4 +103,17 @@ class GtagsProject(object):
 
 		return False
 
+	def get_gtags_paths(self):
+		paths = []
+		project = sublime.active_window().project_data()
+		folders = project.get('folders')
+		logger.debug("project folders: %s", folders)
+		for folder in folders:
+			gtags_path = os.path.join(folder.get('path'), "GTAGS")
+			logger.debug("test gtags path: %s", gtags_path)
+			if os.path.isfile(gtags_path):
+				logger.debug("get gtags path: %s", gtags_path)
+				paths.append(folder.get('path'))
+		return paths
+
 

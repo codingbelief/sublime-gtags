@@ -142,6 +142,8 @@ class GtagsSymbol(object):
 
 	def sfupdate(self, file_path):
 
+		GtagsProject().get_gtags_paths()
+
 		file_type = os.path.splitext(file_path)[1]
 		logger.info("sfupdate file type %s", file_type)
 
@@ -191,6 +193,15 @@ class GtagsSymbol(object):
 		logger.info("queue put: %s!", file_path)
 		GtagsSymbol.file_changed_queue.put(file_path)
 		return 0
+
+	def search_project(self, options, arg):
+		matches = []
+		gtags_paths = GtagsProject().get_gtags_paths()
+		for gtags_path in gtags_paths:
+			GtagsSymbol.pwd = gtags_path
+			self.setup_kwargs()
+			matches = matches + self.search(options, arg)
+		return matches
 
 	def search(self, options, arg):
 
@@ -259,7 +270,7 @@ class GtagsSymbol(object):
 		       ]
 		return test
 		"""
-		return self.search("-ax", name)
+		return self.search_project("-ax", name)
 
 
 	# Description
