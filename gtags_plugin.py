@@ -24,7 +24,7 @@ class GtagsBuildTagsCommand(sublime_plugin.WindowCommand):
 	def run(self, paths = [], newLeaf = False):
 		logger.info("run GtagsBuildTags!")
 		logger.info("%s", paths)
-		GtagsSymbol(paths).build_tags()
+		GtagsSymbol().build_tags(paths[0])
 
 class GtagsForward(sublime_plugin.TextCommand):
 
@@ -88,7 +88,7 @@ class GtagsJumpToDefinitionCommand(sublime_plugin.TextCommand):
 			self.symbol_name = name
 
 		sublime.status_message('Definitions searching ...............................')
-		definitions = GtagsSymbol(self.view.file_name()).get_definitions(self.symbol_name)
+		definitions = GtagsSymbol().get_definitions(self.symbol_name, self.view.file_name())
 		logger.info("get definitions of symbol: %s, %s!", self.symbol_name, definitions)
 
 		if len(definitions) == 0:
