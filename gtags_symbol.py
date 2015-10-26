@@ -349,7 +349,15 @@ class GtagsSymbol(object):
 
 		logger.info("thread_build_tags begin")
 		self.setup_kwargs()
-		h = self.exec_cmd("gtags --sqlite3 --skip-unreadable")
+
+		gtags_path = os.path.join(GtagsSymbol.pwd, "GTAGS")
+		if os.path.isfile(gtags_path):
+			logger.debug("update GTAGS: %s", gtags_path)
+			h = self.exec_cmd("global -u")
+		else:
+			logger.debug("build GTAGS: %s", gtags_path)
+			h = self.exec_cmd("gtags --sqlite3 --skip-unreadable")
+
 		#h = self.exec_cmd("global " + options) # test errors msg output
 		if h is None:
 			logger.warning("can not exec global!")
