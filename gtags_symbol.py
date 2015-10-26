@@ -11,7 +11,7 @@ import shlex
 import queue
 import SublimeGtags.gtags_project
 import threading
-
+import sublime
 from SublimeGtags.gtags_project import GtagsProject
 
 logging.basicConfig(format="[%(asctime)s] - [%(name)s] - [%(levelname)s] - \n%(message)s\n")
@@ -385,9 +385,10 @@ class GtagsSymbol(object):
 			logger.error(stderr)
 			logger.debug("thread_build_tags failed!")
 			GtagsSymbol.build_tags_thread = None
-			return -1
+			# return -1
 
-		logger.debug("thread_build_tags successfully!")
+		#logger.debug("thread_build_tags successfully!")
+		sublime.message_dialog("build tags done!")
 		logger.debug(stdout)
 		GtagsSymbol.build_tags_thread = None
 
