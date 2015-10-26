@@ -70,10 +70,10 @@ class GtagsSymbol(object):
 		exec_env = {}
 		exec_env['PATH'] = os.environ['PATH']
 		exec_env['PATH'] = os.path.normpath(BIN_PATH)
-		exec_env['GTAGSROOT'] = GtagsSymbol.pwd
+		#exec_env['GTAGSROOT'] = GtagsSymbol.pwd
 
-		if GtagsSymbol.gtags_lib_path is not None:
-			exec_env['GTAGSLIBPATH'] = os.pathsep.join(GtagsSymbol.gtags_lib_path)
+		#if GtagsSymbol.gtags_lib_path is not None:
+		#	exec_env['GTAGSLIBPATH'] = os.pathsep.join(GtagsSymbol.gtags_lib_path)
 
 
 		# setup the parameters for the subprocess interface
@@ -184,9 +184,15 @@ class GtagsSymbol(object):
 		GtagsSymbol.file_changed_queue.put(file_path)
 		return 0
 
-	def search_project(self, options, arg):
+	def search_project(self, options, arg, file_path=None):
 		matches = []
 		gtags_paths = GtagsProject().get_gtags_paths()
+		if len(gtags_paths) is 0:
+			if file_path is None:
+				logger.info("not GTAGS in project or pwd")
+				return []
+			gtags_paths = [ os.path.dirname(file_path) ]
+			logger.info("not GTAGS in project, try pwd: %s", gtags_paths)
 		for gtags_path in gtags_paths:
 			GtagsSymbol.pwd = gtags_path
 			self.setup_kwargs()
@@ -251,7 +257,7 @@ class GtagsSymbol(object):
 	#           }
 	#           { ... } // more definitions
 	#       ]
-	def get_definitions(self, name):
+	def get_definitions(self, name, file_path):
 
 		logger.info("get the definitions of symbol")
 		"""
@@ -260,7 +266,7 @@ class GtagsSymbol(object):
 		       ]
 		return test
 		"""
-		return self.search_project("-ax", name)
+		return self.search_project("-ax", name, file_path)
 
 
 	# Description
@@ -336,9 +342,16 @@ class GtagsSymbol(object):
 			file_path = file_path.replace("\\", "/")
 		return self.search("-axf", file_path)
 
-	def build_tags(self):
+	def build_tags(self, gtags_path):
 
 		if GtagsSymbol.build_tags_thread is None:
+			if os.path.isfile(gtags_path):
+				GtagsSymbol.pwd = os.path.dirname(gtags_path)
+			elif os.path.isdir(gtags_path):
+				GtagsSymbol.pwd = gtags_path
+			else:
+				logger.info("build tags failed in %s", gtags_path)
+				return
 			logger.info("creat build_tags thread")
 			GtagsSymbol.build_tags_thread = threading.Thread(target=self.thread_build_tags)
 			GtagsSymbol.build_tags_thread.start()
