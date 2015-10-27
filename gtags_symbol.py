@@ -176,6 +176,7 @@ class GtagsSymbol(object):
 				pass
 
 	def file_changed(self, file_path):
+		file_path = os.path.realpath(file_path)
 		ret = GtagsProject().is_file_in_project(file_path)
 		if ret is False:
 			return -2

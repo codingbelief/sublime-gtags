@@ -14,14 +14,13 @@ class GtagsProject(object):
 	name=None
 
 	def get_pwd(self, file_path):
-
 		project = sublime.active_window().project_data()
 		if project is None:
 			logger.info("No active project!")
 			if file_path is None:
 				logger.info("No active file!")
 				return "./"
-			return os.path.dirname(file_path)
+			return os.path.realpath(os.path.dirname(file_path))
 
 		folders = project.get('folders')
 		if folders is None:
@@ -29,18 +28,19 @@ class GtagsProject(object):
 			if file_path is None:
 				logger.info("No active file!")
 				return "./"
-			return os.path.dirname(file_path)
+			return os.path.realpath(os.path.dirname(file_path))
 
 		if file_path is None:
-			return os.path.normpath(folders[0].get('path'))
+			return os.path.realpath(folders[0].get('path'))
 
+		file_path = os.path.realpath(file_path)
 		for folder in folders:
-			folder_path = os.path.normpath(folder.get('path'))
+			folder_path = os.path.realpath(folder.get('path'))
 			if folder_path in file_path:
 				logger.info("PWD is %s", folder_path)
 				return folder_path
 
-		return os.path.normpath(folders[0].get('path'))
+		return os.path.realpath(folders[0].get('path'))
 
 
 	def get_config(self):
@@ -94,9 +94,9 @@ class GtagsProject(object):
 
 		if file_path is None:
 			return False
-
+		file_path = os.path.realpath(file_path)
 		for folder in folders:
-			folder_path = os.path.normpath(folder.get('path'))
+			folder_path = os.path.realpath(folder.get('path'))
 			if folder_path in file_path:
 				logger.info("parent project is %s", folder_path)
 				return True
@@ -109,11 +109,12 @@ class GtagsProject(object):
 		folders = project.get('folders')
 		logger.debug("project folders: %s", folders)
 		for folder in folders:
-			gtags_path = os.path.join(folder.get('path'), "GTAGS")
-			logger.debug("test gtags path: %s", gtags_path)
+			folder_path = os.path.realpath(folder.get('path'))
+			gtags_path  = os.path.join(folder_path, "GTAGS")
+			logger.debug("test gtags path: %s !", gtags_path)
 			if os.path.isfile(gtags_path):
 				logger.debug("get gtags path: %s", gtags_path)
-				paths.append(folder.get('path'))
+				paths.append(folder_path)
 		return paths
 
 
