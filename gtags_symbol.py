@@ -389,9 +389,10 @@ class GtagsSymbol(object):
 			# return -1
 
 		#logger.debug("thread_build_tags successfully!")
+		self.version(gtags_path)
+		GtagsSymbol.build_tags_thread = None
 		sublime.message_dialog("build tags done!")
 		logger.debug(stdout)
-		GtagsSymbol.build_tags_thread = None
 
 		return 0
 
