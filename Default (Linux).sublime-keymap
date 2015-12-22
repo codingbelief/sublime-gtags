@@ -15,4 +15,5 @@
 	{ "keys": ["alt+i"], "command": "gtags_single_file_update_tags" },
 	{ "keys": ["alt+m"], "command": "strapdown_markdown_preview", "args": {"target": "browser"} },
 	{ "keys": ["alt+f"], "command": "side_bar_find_in_parent",   "args": {"paths": []} },
+	{ "keys": ["ctrl+shift+\\"], "command": "reveal_in_side_bar",   "args": {"paths": []} },
 ]
