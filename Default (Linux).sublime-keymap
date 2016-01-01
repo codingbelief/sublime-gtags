@@ -3,8 +3,8 @@
 	{ "keys": ["alt+w"], "command": "gtags_forward" },
 	{ "keys": ["alt+5"], "command": "gtags_show_trace" },
 
-	{ "keys": ["alt+,"], "command": "jump_back" },
-	{ "keys": ["alt+."], "command": "jump_forward" },
+	{ "keys": ["alt+,"], "command": "gtags_cursor_backward" },
+	{ "keys": ["alt+."], "command": "gtags_cursor_forward" },
 
 	{ "keys": ["alt+1"], "command": "gtags_jump_to_definition" },
 	{ "keys": ["alt+2"], "command": "gtags_jump_to_reference" },

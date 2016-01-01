@@ -17,19 +17,23 @@ class GtagsUIQuickPanel(object):
 	symbol = None
 	show_traces = False
 	def file_jump(self, path, line=None):
+		GtagsNavigation().lock()
 		if path is not None:
 			logger.info("jump to file: %s:%s", line, path)
 			position = '%s:%d:0' % (os.path.normpath(path), int(line))
 			sublime.active_window().open_file(position, sublime.ENCODED_POSITION)
 			if self.show_traces is False:
 				GtagsNavigation().add(path, line, self.symbol)
+		GtagsNavigation().unlock()
 
 
 	def file_preview(self, path, line):
+		GtagsNavigation().lock()
 		if path is not None:
 			logger.info("preview file: %s:%s", line, path)
 			position = '%s:%d:0' % (os.path.normpath(path), int(line))
 			sublime.active_window().open_file(position, sublime.ENCODED_POSITION | sublime.TRANSIENT)
+		GtagsNavigation().unlock()
 
 	def show(self, panel_list, path_list, event_listener=None):
 

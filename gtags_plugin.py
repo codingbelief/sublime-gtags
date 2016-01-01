@@ -36,6 +36,16 @@ class GtagsBackward(sublime_plugin.TextCommand):
 	def run(self, edit):
 		GtagsNavigation().backward()
 
+class GtagsCursorForward(sublime_plugin.TextCommand):
+
+	def run(self, edit):
+		GtagsNavigation().forward_cursor_trace()
+
+class GtagsCursorBackward(sublime_plugin.TextCommand):
+
+	def run(self, edit):
+		GtagsNavigation().backward_cursor_trace()
+
 class GtagsShowTrace(sublime_plugin.TextCommand):
 
 	def run(self, edit):
@@ -330,4 +340,8 @@ class GtagsAutoUpdateTags(sublime_plugin.EventListener):
 			logger.info("Auto Single File UpdateTags failed")
 			sublime.status_message('Gtags Auto Single File UpdateTags Failed')
 
+class GtagsCursorTrace(sublime_plugin.EventListener):
 
+	def on_selection_modified(self, view):
+
+		GtagsNavigation().add_cursor_trace(view.file_name(), view.rowcol(view.sel()[0].a)[0]+1)

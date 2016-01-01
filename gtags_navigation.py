@@ -13,8 +13,103 @@ logger.setLevel(logging.DEBUG)
 class GtagsNavigation(object):
 	trace = [];
 	current_index = 0;
+	trace0 = [];
+	current_index0 = 0;
+	trace1 = [];
+	current_index1 = 0;
+	cursor_lock = 0;
+
+	def lock(self):
+		GtagsNavigation.cursor_lock = 1
+
+	def unlock(self):
+		GtagsNavigation.cursor_lock = 0
 
 	def add(self, path, line, symbol=None):
+		logger.info("GtagsNavigation add")
+		GtagsNavigation.trace = GtagsNavigation.trace0
+		GtagsNavigation.current_index = GtagsNavigation.current_index0
+		self.__add(path, line, symbol)
+		GtagsNavigation.trace0 = GtagsNavigation.trace
+		GtagsNavigation.current_index0 = GtagsNavigation.current_index
+
+	def show_trace(self):
+		GtagsNavigation.trace = GtagsNavigation.trace0
+		GtagsNavigation.current_index = GtagsNavigation.current_index0
+		self.__show_trace()
+		GtagsNavigation.trace0 = GtagsNavigation.trace
+		GtagsNavigation.current_index0 = GtagsNavigation.current_index
+
+	def forward(self):
+		GtagsNavigation.cursor_lock = 1
+		GtagsNavigation.trace = GtagsNavigation.trace0
+		GtagsNavigation.current_index = GtagsNavigation.current_index0
+		self.__forward()
+		GtagsNavigation.trace0 = GtagsNavigation.trace
+		GtagsNavigation.current_index0 = GtagsNavigation.current_index
+
+
+	def backward(self):
+		GtagsNavigation.cursor_lock = 1
+		GtagsNavigation.trace = GtagsNavigation.trace0
+		GtagsNavigation.current_index = GtagsNavigation.current_index0
+		self.__backward()
+		GtagsNavigation.trace0 = GtagsNavigation.trace
+		GtagsNavigation.current_index0 = GtagsNavigation.current_index
+
+	def set_cur_index(self, index):
+		GtagsNavigation.trace = GtagsNavigation.trace0
+		GtagsNavigation.current_index = GtagsNavigation.current_index0
+		self.__set_cur_index(index)
+		GtagsNavigation.trace0 = GtagsNavigation.trace
+		GtagsNavigation.current_index0 = GtagsNavigation.current_index
+
+
+	def add_cursor_trace(self, path, line, symbol=None):
+		if GtagsNavigation.cursor_lock == 1:
+			GtagsNavigation.cursor_lock = 0
+			return
+
+		if path is None:
+			logger.info("GtagsNavigation add_cursor_trace, path is None")
+			return
+
+		logger.info("GtagsNavigation add_cursor_trace")
+		GtagsNavigation.trace = GtagsNavigation.trace1
+		GtagsNavigation.current_index = GtagsNavigation.current_index1
+		self.__add(path, line, symbol)
+		GtagsNavigation.trace1 = GtagsNavigation.trace
+		GtagsNavigation.current_index1 = GtagsNavigation.current_index
+
+	def show_cursor_trace(self):
+		GtagsNavigation.trace = GtagsNavigation.trace1
+		GtagsNavigation.current_index = GtagsNavigation.current_index1
+		self.__show_trace()
+		GtagsNavigation.trace1 = GtagsNavigation.trace
+		GtagsNavigation.current_index1 = GtagsNavigation.current_index
+
+	def forward_cursor_trace(self):
+		GtagsNavigation.trace = GtagsNavigation.trace1
+		GtagsNavigation.current_index = GtagsNavigation.current_index1
+		self.__forward()
+		GtagsNavigation.trace1 = GtagsNavigation.trace
+		GtagsNavigation.current_index1 = GtagsNavigation.current_index
+
+	def backward_cursor_trace(self):
+		GtagsNavigation.trace = GtagsNavigation.trace1
+		GtagsNavigation.current_index = GtagsNavigation.current_index1
+		self.__backward()
+		GtagsNavigation.trace1 = GtagsNavigation.trace
+		GtagsNavigation.current_index1 = GtagsNavigation.current_index
+
+	def set_cursor_trace_cur_index(self, index):
+		GtagsNavigation.trace = GtagsNavigation.trace1
+		GtagsNavigation.current_index = GtagsNavigation.current_index1
+		self.__set_cur_index(index)
+		GtagsNavigation.trace1 = GtagsNavigation.trace
+		GtagsNavigation.current_index1 = GtagsNavigation.current_index
+
+	def __add(self, path, line, symbol=None):
 		# view = sublime.active_window().active_view()
 		# symbol = view.substr(view.word(view.sel()[0].a))
 		if len(GtagsNavigation.trace) == 0:
@@ -51,12 +146,11 @@ class GtagsNavigation(object):
 
 		logger.info("trace len: %s, index: %s", len(GtagsNavigation.trace), GtagsNavigation.current_index)
 
-	def show_trace(self):
+	def __show_trace(self):
 
 		return GtagsNavigation.trace
 
-	def forward(self):
-
+	def __forward(self):
 		if GtagsNavigation.current_index >= len(GtagsNavigation.trace)-1:
 			return
 
@@ -75,8 +169,7 @@ class GtagsNavigation(object):
 		position = '%s:%d:0' % (os.path.normpath(path), int(line))
 		sublime.active_window().open_file(position, sublime.ENCODED_POSITION)
 
-
-	def backward(self):
+	def __backward(self):
 		if GtagsNavigation.current_index == 0 and len(GtagsNavigation.trace) != 1:
 			return
 
@@ -95,12 +188,12 @@ class GtagsNavigation(object):
 		position = '%s:%d:0' % (os.path.normpath(path), int(line))
 		sublime.active_window().open_file(position, sublime.ENCODED_POSITION)
 
-	def set_cur_index(self, index):
+	def __set_cur_index(self, index):
 		if index > 0 and index < len(GtagsNavigation.trace):
 			GtagsNavigation.current_index=index
 			logger.info("set index: %s", index)
 
-	def cleanup(self):
+	def __cleanup(self):
 		GtagsNavigation.trace = [];
 		GtagsNavigation.current_index = 0;
 
